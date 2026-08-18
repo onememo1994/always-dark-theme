@@ -127,6 +127,8 @@ export const t: Dict = {
   "events.tab.work": { en: "EXPERIENCE", ar: "الخبرة" },
   "events.tab.projects": { en: "PLATFORMS", ar: "المنصات" },
   "events.tab.education": { en: "EDUCATION", ar: "التعليم" },
+  "events.tab.certifications": { en: "CERTIFICATIONS", ar: "الشهادات" },
+  "events.credentialId": { en: "Credential ID", ar: "رقم الشهادة" },
   "events.empty": { en: "Nothing here yet.", ar: "لا يوجد شيء هنا بعد." },
   "events.cta": { en: "VIEW FULL EXPERIENCE", ar: "عرض الخبرة الكاملة" },
 
