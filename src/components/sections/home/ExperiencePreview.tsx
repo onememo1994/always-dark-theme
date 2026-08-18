@@ -1,42 +1,39 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Building2, Layers, GraduationCap, ArrowRight } from "lucide-react";
+import {
+  Building2,
+  Layers,
+  GraduationCap,
+  BadgeCheck,
+  ArrowRight,
+  Calendar,
+  MapPin,
+  ChevronDown,
+  ShieldCheck,
+} from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { credentials, credentialTabs, type CredentialTab } from "@/data/credentials";
 
-type TabId = "work" | "projects" | "education";
-
-interface HighlightItem {
-  id: string;
-  year: string;
-  tab: TabId;
-  featured?: boolean;
-}
-
-const highlights: HighlightItem[] = [
-  { id: "we3ds", year: "2024", tab: "work", featured: true },
-  { id: "freelance", year: "2023", tab: "work" },
-  { id: "platform", year: "2025", tab: "projects", featured: true },
-  { id: "iot", year: "2024", tab: "projects" },
-  { id: "devops", year: "2024", tab: "projects" },
-  { id: "degree", year: "2021", tab: "education", featured: true },
-  { id: "arch", year: "2022", tab: "education" },
-];
-
-const tabs: { id: TabId; Icon: typeof Building2 }[] = [
-  { id: "work", Icon: Building2 },
-  { id: "projects", Icon: Layers },
-  { id: "education", Icon: GraduationCap },
-];
+const tabIcons: Record<CredentialTab, typeof Building2> = {
+  work: Building2,
+  projects: Layers,
+  education: GraduationCap,
+  certifications: BadgeCheck,
+};
 
 export function ExperiencePreview() {
-  const [activeTab, setActiveTab] = useState<TabId>("work");
-  const { tr } = useI18n();
+  const [activeTab, setActiveTab] = useState<CredentialTab>("work");
+  const [openId, setOpenId] = useState<string | null>(null);
+  const { tr, lang } = useI18n();
 
-  const items = useMemo(() => highlights.filter((h) => h.tab === activeTab), [activeTab]);
-  const ActiveIcon = tabs.find((t) => t.id === activeTab)!.Icon;
+  const items = useMemo(() => credentials.filter((c) => c.tab === activeTab), [activeTab]);
+  const ActiveIcon = tabIcons[activeTab];
 
   return (
-    <section id="events" className="w-full bg-background py-20 px-4 sm:px-8 md:px-12 text-foreground">
+    <section
+      id="events"
+      className="w-full bg-background py-20 px-4 sm:px-8 md:px-12 text-foreground"
+    >
       <div className="mx-auto max-w-5xl">
         <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-center tracking-tight">
           {tr("events.title")}
@@ -46,15 +43,24 @@ export function ExperiencePreview() {
         </p>
 
         {/* Tabs */}
-        <div role="tablist" aria-label={tr("events.title")} className="mt-10 mb-10 flex flex-wrap items-center justify-center gap-3">
-          {tabs.map(({ id, Icon }) => {
+        <div
+          role="tablist"
+          aria-label={tr("events.title")}
+          className="mt-10 mb-10 flex flex-wrap items-center justify-center gap-3"
+        >
+          {credentialTabs.map((id) => {
+            const Icon = tabIcons[id];
             const active = activeTab === id;
+            const count = credentials.filter((c) => c.tab === id).length;
             return (
               <button
                 key={id}
                 role="tab"
                 aria-selected={active}
-                onClick={() => setActiveTab(id)}
+                onClick={() => {
+                  setActiveTab(id);
+                  setOpenId(null);
+                }}
                 className={`inline-flex items-center gap-2 whitespace-nowrap rounded-xl px-5 py-2.5 font-sans text-xs font-black uppercase tracking-[0.18em] transition-all ${
                   active
                     ? "bg-foreground text-background shadow-md"
@@ -63,6 +69,13 @@ export function ExperiencePreview() {
               >
                 <Icon className="size-3.5" />
                 {tr(`events.tab.${id}`)}
+                <span
+                  className={`rounded-md px-1.5 py-0.5 text-[10px] ${
+                    active ? "bg-background/20" : "bg-foreground/10"
+                  }`}
+                >
+                  {count}
+                </span>
               </button>
             );
           })}
@@ -74,47 +87,135 @@ export function ExperiencePreview() {
             <p className="text-center text-sm text-muted-foreground">{tr("events.empty")}</p>
           )}
 
-          {items.map(({ id, year, featured }) => (
-            <article
-              key={id}
-              className={`flex flex-col gap-4 rounded-2xl p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6 transition-all duration-300 ${
-                featured
-                  ? "bg-foreground text-background shadow-[var(--shadow-glow)]"
-                  : "border border-border bg-card text-card-foreground shadow-md hover:bg-card/90"
-              }`}
-            >
-              <div className="flex items-center gap-5 sm:gap-7">
-                <span dir="ltr" className="min-w-10 font-['Oswald',sans-serif] text-sm font-bold opacity-80">
-                  {year}
-                </span>
-
-                <div
-                  className={`grid size-10 shrink-0 place-items-center rounded-xl ${
-                    featured ? "bg-primary text-primary-foreground" : "bg-foreground/10 text-primary"
-                  }`}
-                >
-                  <ActiveIcon className="size-4" />
-                </div>
-
-                <div className="min-w-0">
-                  <h3 className="font-['Oswald',sans-serif] text-lg sm:text-xl font-bold leading-tight tracking-tight">
-                    {tr(`events.item.${id}.name`)}
-                  </h3>
-                  <p className={`mt-1 text-xs font-semibold ${featured ? "opacity-80" : "text-muted-foreground"}`}>
-                    {tr(`events.item.${id}.location`)}
-                  </p>
-                </div>
-              </div>
-
-              <p
-                className={`text-xs font-bold sm:max-w-[18rem] sm:text-end ${
-                  featured ? "opacity-90" : "text-muted-foreground"
+          {items.map((item) => {
+            const open = openId === item.id;
+            const featured = item.featured;
+            return (
+              <article
+                key={item.id}
+                className={`overflow-hidden rounded-2xl transition-all duration-300 ${
+                  featured
+                    ? "bg-foreground text-background shadow-[var(--shadow-glow)]"
+                    : "border border-border bg-card text-card-foreground shadow-md"
                 }`}
               >
-                {tr(`events.item.${id}.topic`)}
-              </p>
-            </article>
-          ))}
+                <button
+                  onClick={() => setOpenId(open ? null : item.id)}
+                  aria-expanded={open}
+                  className="flex w-full flex-col gap-4 p-5 text-start sm:flex-row sm:items-center sm:justify-between sm:p-6"
+                >
+                  <div className="flex items-center gap-5 sm:gap-7">
+                    <span
+                      dir="ltr"
+                      className="min-w-10 font-['Oswald',sans-serif] text-sm font-bold opacity-80"
+                    >
+                      {item.year}
+                    </span>
+
+                    <div
+                      className={`grid size-10 shrink-0 place-items-center rounded-xl ${
+                        featured
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-foreground/10 text-primary"
+                      }`}
+                    >
+                      <ActiveIcon className="size-4" />
+                    </div>
+
+                    <div className="min-w-0">
+                      <h3 className="font-['Oswald',sans-serif] text-lg sm:text-xl font-bold leading-tight tracking-tight">
+                        {item.title[lang]}
+                      </h3>
+                      <p
+                        className={`mt-1 text-xs font-semibold ${
+                          featured ? "opacity-80" : "text-muted-foreground"
+                        }`}
+                      >
+                        {item.org[lang]} · {item.location[lang]}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 sm:max-w-[20rem] sm:justify-end">
+                    <p
+                      className={`text-xs font-bold sm:text-end ${
+                        featured ? "opacity-90" : "text-muted-foreground"
+                      }`}
+                    >
+                      {item.summary[lang]}
+                    </p>
+                    <ChevronDown
+                      className={`size-4 shrink-0 transition-transform duration-300 ${
+                        open ? "rotate-180" : ""
+                      }`}
+                    />
+                  </div>
+                </button>
+
+                {open && (
+                  <div
+                    className={`border-t px-5 pb-6 pt-5 sm:px-6 ${
+                      featured ? "border-background/20" : "border-border"
+                    }`}
+                  >
+                    <div className="flex flex-wrap items-center gap-4 text-xs font-semibold">
+                      <span className="inline-flex items-center gap-1.5 opacity-80">
+                        <Calendar className="size-3.5" />
+                        {item.period[lang]}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 opacity-80">
+                        <MapPin className="size-3.5" />
+                        {item.location[lang]}
+                      </span>
+                      {item.credentialId && (
+                        <span className="inline-flex items-center gap-1.5 opacity-80" dir="ltr">
+                          <ShieldCheck className="size-3.5" />
+                          {tr("events.credentialId")}: {item.credentialId}
+                        </span>
+                      )}
+                      {item.status && (
+                        <span
+                          className={`rounded-md px-2 py-0.5 text-[10px] uppercase tracking-wider ${
+                            featured ? "bg-background/20" : "bg-primary/10 text-primary"
+                          }`}
+                        >
+                          {item.status[lang]}
+                        </span>
+                      )}
+                    </div>
+
+                    <ul className="mt-4 space-y-2">
+                      {item.highlights[lang].map((point) => (
+                        <li
+                          key={point}
+                          className={`flex gap-2.5 text-sm leading-relaxed ${
+                            featured ? "opacity-90" : "text-muted-foreground"
+                          }`}
+                        >
+                          <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {item.stack.map((tech) => (
+                        <span
+                          key={tech}
+                          dir="ltr"
+                          className={`rounded-lg px-2.5 py-1 text-[11px] font-bold ${
+                            featured ? "bg-background/15" : "bg-foreground/5 border border-border"
+                          }`}
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </article>
+            );
+          })}
         </div>
 
         <div className="mt-10 flex justify-center">
