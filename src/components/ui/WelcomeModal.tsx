@@ -7,7 +7,7 @@ import { LottieIcon } from "@/components/ui/LottieIcon";
 const STORAGE_KEY = "welcome-modal-seen";
 const DELAY_MS = 10_000;
 const AUTO_CLOSE_MS = 5_000;
-const TICK_MS = 50;
+const CIRCUMFERENCE = 2 * Math.PI * 17;
 
 /**
  * Welcome invitation that appears once per session, 10s after the visitor
@@ -21,6 +21,7 @@ export function WelcomeModal() {
   const [remaining, setRemaining] = useState(AUTO_CLOSE_MS);
   const [paused, setPaused] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<Element | null>(null);
 
   const close = useCallback(() => {
@@ -56,7 +57,37 @@ export function WelcomeModal() {
     document.body.style.overflow = "hidden";
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") close();
+      if (event.key === "Escape") {
+        event.stopPropagation();
+        close();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      // Focus trap: keep Tab/Shift+Tab cycling inside the dialog.
+      const root = dialogRef.current;
+      if (!root) return;
+      const focusables = Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => el.offsetParent !== null || el === document.activeElement);
+      if (focusables.length === 0) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+
+      if (!active || !root.contains(active)) {
+        event.preventDefault();
+        first.focus();
+      } else if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
     document.addEventListener("keydown", onKeyDown);
 
@@ -66,13 +97,22 @@ export function WelcomeModal() {
     };
   }, [open, close]);
 
-  // Countdown: ticks only while visible and not paused.
+  // Countdown: a rAF loop so the progress bar moves per animation frame
+  // (smooth) instead of stepping in coarse interval jumps.
   useEffect(() => {
     if (!open || paused) return;
-    const id = window.setInterval(() => {
-      setRemaining((value) => Math.max(0, value - TICK_MS));
-    }, TICK_MS);
-    return () => window.clearInterval(id);
+    let frame = 0;
+    let last = performance.now();
+
+    const step = (now: number) => {
+      const delta = now - last;
+      last = now;
+      setRemaining((value) => Math.max(0, value - delta));
+      frame = requestAnimationFrame(step);
+    };
+
+    frame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frame);
   }, [open, paused]);
 
   useEffect(() => {
@@ -95,6 +135,7 @@ export function WelcomeModal() {
       <div className="absolute inset-0 bg-foreground/60 backdrop-blur-sm animate-fade-in" />
 
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="welcome-modal-title"
@@ -178,18 +219,45 @@ export function WelcomeModal() {
           </div>
         </div>
 
+        {/* Countdown ring pinned bottom-start; fades away once it hits zero */}
+        <div
+          aria-hidden="true"
+          className={`absolute bottom-4 start-4 z-20 transition-all duration-500 ease-out ${
+            remaining === 0 ? "scale-75 opacity-0" : "scale-100 opacity-100"
+          }`}
+        >
+          <div className="relative grid size-11 place-items-center">
+            <svg viewBox="0 0 40 40" className="absolute inset-0 size-full -rotate-90">
+              <circle cx="20" cy="20" r="17" className="fill-none stroke-muted" strokeWidth="4" />
+              <circle
+                cx="20"
+                cy="20"
+                r="17"
+                className="fill-none stroke-accent"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeDasharray={CIRCUMFERENCE}
+                strokeDashoffset={CIRCUMFERENCE * (1 - progress / 100)}
+              />
+            </svg>
+            <span className="type-body-sm relative font-bold tabular-nums text-foreground">
+              {paused ? "II" : seconds}
+            </span>
+          </div>
+        </div>
+
         {/* Auto-close progress bar pinned to the bottom edge */}
         <div
           role="progressbar"
-          aria-label={tr("welcome.close")}
+          aria-label={tr("welcome.autoclose").replace("{s}", String(seconds))}
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={Math.round(progress)}
           className="absolute inset-x-0 bottom-0 h-1.5 bg-muted"
         >
           <div
-            className="h-full bg-accent transition-[width] duration-75 ease-linear"
-            style={{ width: `${progress}%` }}
+            className="h-full origin-left bg-accent rtl:origin-right"
+            style={{ transform: `scaleX(${progress / 100})`, willChange: "transform" }}
           />
         </div>
       </div>
