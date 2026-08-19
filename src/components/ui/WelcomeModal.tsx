@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Sparkles, X } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion, type Transition } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
 import { LottieIcon } from "@/components/ui/LottieIcon";
 
 const STORAGE_KEY = "welcome-modal-seen";
 const DELAY_MS = 10_000;
 const AUTO_CLOSE_MS = 5_000;
-const CIRCUMFERENCE = 2 * Math.PI * 17;
+const RING_RADIUS = 54;
+const CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 
 /**
  * Welcome invitation that appears once per session, 10s after the visitor
@@ -17,6 +19,7 @@ const CIRCUMFERENCE = 2 * Math.PI * 17;
  */
 export function WelcomeModal() {
   const { tr, dir } = useI18n();
+  const prefersReducedMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [remaining, setRemaining] = useState(AUTO_CLOSE_MS);
   const [paused, setPaused] = useState(false);
@@ -126,141 +129,203 @@ export function WelcomeModal() {
   const hold = () => setPaused(true);
   const release = () => setPaused(false);
 
+  const transition: Transition = prefersReducedMotion
+    ? { duration: 0 }
+    : { duration: 0.35, ease: [0.22, 1, 0.36, 1] };
+
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6"
-      role="presentation"
-      onClick={close}
-    >
-      <div className="absolute inset-0 bg-foreground/60 backdrop-blur-sm animate-fade-in" />
-
-      <div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="welcome-modal-title"
-        aria-describedby="welcome-modal-body"
-        dir={dir}
-        onClick={(event) => event.stopPropagation()}
-        onMouseEnter={hold}
-        onMouseLeave={release}
-        onFocusCapture={(event) => {
-          // Ignore the initial programmatic focus on the close button.
-          if ((event.target as Node) !== closeRef.current) hold();
-        }}
-        onTouchStart={hold}
-        onTouchEnd={release}
-        className="relative w-full max-w-[min(100%,34rem)] overflow-hidden rounded-2xl border border-border bg-card shadow-2xl animate-scale-in md:max-w-3xl"
+    <AnimatePresence>
+      <motion.div
+        key="welcome-backdrop"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={transition}
+        className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6"
+        role="presentation"
+        onClick={close}
       >
-        <div className="grid-bg pointer-events-none absolute inset-0 opacity-40" />
+        <div className="absolute inset-0 bg-foreground/60 backdrop-blur-sm" />
 
-        <button
-          ref={closeRef}
-          type="button"
-          onClick={close}
-          aria-label={tr("welcome.close")}
-          className="absolute end-3 top-3 z-20 rounded-xl bg-card/80 p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:end-4 sm:top-4"
+        <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="welcome-modal-title"
+          aria-describedby="welcome-modal-body"
+          dir={dir}
+          onClick={(event) => event.stopPropagation()}
+          onMouseEnter={hold}
+          onMouseLeave={release}
+          onFocusCapture={(event) => {
+            // Ignore the initial programmatic focus on the close button.
+            if ((event.target as Node) !== closeRef.current) hold();
+          }}
+          onTouchStart={hold}
+          onTouchEnd={release}
+          initial={{ opacity: 0, scale: 0.92, y: 24 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.96, y: 16 }}
+          transition={transition}
+          className="relative w-full max-w-[min(100%,34rem)] overflow-hidden rounded-2xl border border-border bg-card shadow-2xl md:max-w-3xl"
         >
-          <X className="h-4 w-4" />
-        </button>
+          <div className="grid-bg pointer-events-none absolute inset-0 opacity-40" />
 
-        {/* Two-column grid on desktop: visual rail + message column */}
-        <div className="relative grid gap-6 p-6 pb-10 text-center sm:p-8 sm:pb-12 md:grid-cols-[minmax(0,12rem)_minmax(0,1fr)] md:items-center md:gap-8 md:p-10 md:pb-14 md:text-start">
-          <div className="flex min-w-0 flex-col items-center gap-3 md:items-start">
-            <LottieIcon
-              src="/lottie/welcome-hello.lottie"
-              className="h-24 w-32 shrink-0 sm:h-28 sm:w-36 md:h-36 md:w-44"
-              fallback={<Sparkles className="h-10 w-10 text-accent" />}
-            />
-            <span className="chip">
-              <Sparkles className="h-3.5 w-3.5 shrink-0" />
-              {tr("welcome.eyebrow")}
-            </span>
-          </div>
+          <button
+            ref={closeRef}
+            type="button"
+            onClick={close}
+            aria-label={tr("welcome.close")}
+            className="absolute end-3 top-3 z-20 rounded-xl bg-card/80 p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:end-4 sm:top-4"
+          >
+            <X className="h-4 w-4" />
+          </button>
 
-          <div className="min-w-0">
-            <h2 id="welcome-modal-title" className="type-h2 text-balance text-foreground">
-              {tr("welcome.title")}
-            </h2>
+          {/* Two-column grid on desktop: visual rail + message column */}
+          <div className="relative grid gap-6 p-6 pb-10 text-center sm:p-8 sm:pb-12 md:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] md:items-stretch md:gap-8 md:p-10 md:pb-14 md:text-start">
+            {/* Visual rail: top half Lottie, bottom half large counter */}
+            <div className="flex min-h-[16rem] flex-col items-center gap-4 md:min-h-full">
+              {/* Top half — Lottie */}
+              <div className="flex flex-1 items-center justify-center">
+                <LottieIcon
+                  src="/lottie/welcome-hello.lottie"
+                  className="h-28 w-36 sm:h-32 sm:w-40 md:h-40 md:w-48"
+                  fallback={<Sparkles className="h-12 w-12 text-accent" />}
+                />
+              </div>
 
-            <p id="welcome-modal-body" className="mt-3 type-lead text-muted-foreground">
-              {tr("welcome.body")}
-            </p>
-
-            <p className="mt-3 type-body-strong text-accent">{tr("welcome.highlight")}</p>
-
-            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <Link
-                to="/contact"
-                onClick={close}
-                className="btn-accent w-full items-center justify-center gap-2 whitespace-nowrap py-3.5 type-body-sm"
+              {/* Bottom half — large countdown counter */}
+              <motion.div
+                aria-hidden="true"
+                className="relative flex flex-1 flex-col items-center justify-center"
+                initial={false}
+                animate={paused ? { scale: 1.02 } : { scale: 1 }}
+                transition={{ duration: 0.25 }}
               >
-                {tr("welcome.primary")}
-                <ArrowRight className="h-4 w-4 shrink-0 rtl:rotate-180" />
-              </Link>
-              <Link
-                to="/projects"
-                onClick={close}
-                className="btn-accent-outline w-full items-center justify-center gap-2 whitespace-nowrap py-3.5 type-body-sm"
-              >
-                {tr("welcome.secondary")}
-              </Link>
-            </div>
+                <div className="relative grid h-28 w-28 place-items-center sm:h-32 sm:w-32 md:h-36 md:w-36">
+                  {/* Background track */}
+                  <svg
+                    viewBox={`0 0 ${RING_RADIUS * 2 + 12} ${RING_RADIUS * 2 + 12}`}
+                    className="absolute inset-0 size-full -rotate-90"
+                  >
+                    <circle
+                      cx={RING_RADIUS + 6}
+                      cy={RING_RADIUS + 6}
+                      r={RING_RADIUS}
+                      className="fill-none stroke-muted"
+                      strokeWidth="6"
+                    />
+                    <motion.circle
+                      cx={RING_RADIUS + 6}
+                      cy={RING_RADIUS + 6}
+                      r={RING_RADIUS}
+                      className="fill-none stroke-accent"
+                      strokeWidth="6"
+                      strokeLinecap="round"
+                      strokeDasharray={CIRCUMFERENCE}
+                      initial={{ strokeDashoffset: 0 }}
+                      animate={{
+                        strokeDashoffset: CIRCUMFERENCE * (1 - progress / 100),
+                      }}
+                      transition={{ duration: 0, ease: "linear" }}
+                    />
+                  </svg>
 
-            <div className="mt-5 flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-              <p className="eyebrow min-w-0 text-muted-foreground">{tr("welcome.footnote")}</p>
-              <span
-                aria-live="polite"
-                className="eyebrow shrink-0 tabular-nums text-muted-foreground"
-              >
-                {paused ? tr("welcome.paused") : tr("welcome.autoclose").replace("{s}", String(seconds))}
+                  {/* Center number with cross-fade on change */}
+                  <div className="relative flex items-center justify-center">
+                    <AnimatePresence mode="popLayout" initial={false}>
+                      <motion.span
+                        key={paused ? "paused" : seconds}
+                        initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 12, scale: 0.8 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: prefersReducedMotion ? 0 : -12, scale: 0.8 }}
+                        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                        className="type-h1 absolute font-bold tabular-nums text-foreground"
+                      >
+                        {paused ? "II" : seconds}
+                      </motion.span>
+                    </AnimatePresence>
+                  </div>
+                </div>
+
+                {/* Counter label */}
+                <motion.span
+                  key={paused ? "paused" : "counting"}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="mt-2 text-[10px] font-medium uppercase tracking-widest text-muted-foreground"
+                >
+                  {paused ? tr("welcome.paused") : tr("welcome.autocloseLabel")}
+                </motion.span>
+              </motion.div>
+
+              <span className="chip">
+                <Sparkles className="h-3.5 w-3.5 shrink-0" />
+                {tr("welcome.eyebrow")}
               </span>
             </div>
-          </div>
-        </div>
 
-        {/* Countdown ring pinned bottom-start; fades away once it hits zero */}
-        <div
-          aria-hidden="true"
-          className={`absolute bottom-4 start-4 z-20 transition-all duration-500 ease-out ${
-            remaining === 0 ? "scale-75 opacity-0" : "scale-100 opacity-100"
-          }`}
-        >
-          <div className="relative grid size-11 place-items-center">
-            <svg viewBox="0 0 40 40" className="absolute inset-0 size-full -rotate-90">
-              <circle cx="20" cy="20" r="17" className="fill-none stroke-muted" strokeWidth="4" />
-              <circle
-                cx="20"
-                cy="20"
-                r="17"
-                className="fill-none stroke-accent"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeDasharray={CIRCUMFERENCE}
-                strokeDashoffset={CIRCUMFERENCE * (1 - progress / 100)}
-              />
-            </svg>
-            <span className="type-body-sm relative font-bold tabular-nums text-foreground">
-              {paused ? "II" : seconds}
-            </span>
-          </div>
-        </div>
+            <div className="min-w-0">
+              <h2 id="welcome-modal-title" className="type-h2 text-balance text-foreground">
+                {tr("welcome.title")}
+              </h2>
 
-        {/* Auto-close progress bar pinned to the bottom edge */}
-        <div
-          role="progressbar"
-          aria-label={tr("welcome.autoclose").replace("{s}", String(seconds))}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={Math.round(progress)}
-          className="absolute inset-x-0 bottom-0 h-1.5 bg-muted"
-        >
+              <p id="welcome-modal-body" className="mt-3 type-lead text-muted-foreground">
+                {tr("welcome.body")}
+              </p>
+
+              <p className="mt-3 type-body-strong text-accent">{tr("welcome.highlight")}</p>
+
+              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <Link
+                  to="/contact"
+                  onClick={close}
+                  className="btn-accent w-full items-center justify-center gap-2 whitespace-nowrap py-3.5 type-body-sm"
+                >
+                  {tr("welcome.primary")}
+                  <ArrowRight className="h-4 w-4 shrink-0 rtl:rotate-180" />
+                </Link>
+                <Link
+                  to="/projects"
+                  onClick={close}
+                  className="btn-accent-outline w-full items-center justify-center gap-2 whitespace-nowrap py-3.5 type-body-sm"
+                >
+                  {tr("welcome.secondary")}
+                </Link>
+              </div>
+
+              <div className="mt-5 flex flex-col items-center gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                <p className="eyebrow min-w-0 text-muted-foreground">{tr("welcome.footnote")}</p>
+                <span
+                  aria-live="polite"
+                  className="eyebrow shrink-0 tabular-nums text-muted-foreground"
+                >
+                  {paused
+                    ? tr("welcome.paused")
+                    : tr("welcome.autoclose").replace("{s}", String(seconds))}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Auto-close progress bar pinned to the bottom edge */}
           <div
-            className="h-full origin-left bg-accent rtl:origin-right"
-            style={{ transform: `scaleX(${progress / 100})`, willChange: "transform" }}
-          />
-        </div>
-      </div>
-    </div>
+            role="progressbar"
+            aria-label={tr("welcome.autoclose").replace("{s}", String(seconds))}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(progress)}
+            className="absolute inset-x-0 bottom-0 h-1.5 bg-muted"
+          >
+            <motion.div
+              className="h-full origin-left bg-accent rtl:origin-right"
+              style={{ willChange: "transform" }}
+              animate={{ scaleX: progress / 100 }}
+              transition={{ duration: 0, ease: "linear" }}
+            />
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
