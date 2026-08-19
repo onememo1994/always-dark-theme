@@ -129,7 +129,7 @@ export function WelcomeModal() {
   const hold = () => setPaused(true);
   const release = () => setPaused(false);
 
-  const transition = prefersReducedMotion
+  const transition: Transition = prefersReducedMotion
     ? { duration: 0 }
     : { duration: 0.35, ease: [0.22, 1, 0.36, 1] };
 
