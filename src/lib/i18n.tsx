@@ -1,10 +1,10 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
-export type Lang = "en" | "ar";
+type Lang = "en" | "ar";
 
 type Dict = Record<string, { en: string; ar: string }>;
 
-export const t: Dict = {
+const t: Dict = {
   "nav.works": { en: "WORKS", ar: "الأعمال" },
   "works.title": { en: "Selected Work", ar: "أعمال مختارة" },
   "projects.index.results": { en: "Project results", ar: "نتائج المشاريع" },
@@ -25,12 +25,11 @@ export const t: Dict = {
   "hero.cta": { en: "VIEW MY WORK", ar: "شاهد أعمالي" },
   "hero.cv": { en: "DOWNLOAD CV", ar: "تحميل السيرة" },
 
-
   "about.preview.title1": { en: "4+ Years of", ar: "4+ سنوات من" },
   "about.preview.title2": { en: "Full Stack Excellence", ar: "التميز التقني" },
-  "about.preview.desc": { 
+  "about.preview.desc": {
     en: "Senior Full Stack Engineer specializing in scaling marketplace throughput by 300% using .NET 8, Clean Architecture & Next.js.",
-    ar: "مهندس متكامل أول متخصص في زيادة سعة المنصات بنسبة 300% باستخدام .NET 8 و Clean Architecture و Next.js."
+    ar: "مهندس متكامل أول متخصص في زيادة سعة المنصات بنسبة 300% باستخدام .NET 8 و Clean Architecture و Next.js.",
   },
   "about.preview.cta": { en: "VIEW CASE", ar: "عرض الحالة" },
 
@@ -46,12 +45,15 @@ export const t: Dict = {
   "projects.index.page": { en: "page", ar: "صفحة" },
   "projects.card.details": { en: "View details", ar: "عرض التفاصيل" },
   "projects.index.title": { en: "All Projects", ar: "جميع المشاريع" },
-  "projects.index.desc": { 
-    en: "Marketplaces, .NET 8 microservices, real-time dashboards, and multi-tenant architectures.", 
-    ar: "أسواق رقمية، خدمات مصغرة بـ .NET 8، لوحات تحكم لحظية، وهياكل متعددة المستأجرين." 
+  "projects.index.desc": {
+    en: "Marketplaces, .NET 8 microservices, real-time dashboards, and multi-tenant architectures.",
+    ar: "أسواق رقمية، خدمات مصغرة بـ .NET 8، لوحات تحكم لحظية، وهياكل متعددة المستأجرين.",
   },
   "projects.index.search": { en: "Search projects", ar: "البحث في المشاريع" },
-  "projects.index.searchPlaceholder": { en: "Search by name, tech, client...", ar: "ابحث بالاسم، التقنية، العميل..." },
+  "projects.index.searchPlaceholder": {
+    en: "Search by name, tech, client...",
+    ar: "ابحث بالاسم، التقنية، العميل...",
+  },
   "projects.index.clear": { en: "Clear search", ar: "مسح البحث" },
   "projects.index.sort": { en: "Sort projects", ar: "فرز المشاريع" },
   "projects.index.featured": { en: "Featured", ar: "مميز" },
@@ -73,7 +75,21 @@ export const t: Dict = {
   "project.detail.continue": { en: "Continue Exploring", ar: "واصل الاستكشاف" },
   "project.detail.prev": { en: "PREVIOUS PROJECT", ar: "المشروع السابق" },
   "project.detail.next": { en: "NEXT PROJECT", ar: "المشروع التالي" },
-  
+  "project.detail.overview": { en: "Project Overview", ar: "نظرة عامة على المشروع" },
+  "project.detail.challenge": { en: "The Challenge", ar: "التحدي" },
+  "project.detail.solution": { en: "The Approach", ar: "المنهجية" },
+  "project.detail.features": { en: "Core Features", ar: "أهم المزايا" },
+  "project.detail.responsibilities": { en: "My Role & Contributions", ar: "دوري ومساهماتي" },
+  "project.detail.process": { en: "Delivery Process", ar: "مراحل التنفيذ" },
+  "project.detail.outcomes": { en: "Results & Outcomes", ar: "النتائج" },
+  "project.detail.related": { en: "Related Projects", ar: "مشاريع مشابهة" },
+  "project.detail.role": { en: "Role", ar: "الدور" },
+  "project.detail.team": { en: "Team", ar: "الفريق" },
+  "project.detail.timeline": { en: "Delivery", ar: "التسليم" },
+  "project.detail.platforms": { en: "Platforms", ar: "المنصات" },
+  "project.detail.stackNotes": { en: "Engineering Notes", ar: "ملاحظات هندسية" },
+  "project.detail.atAGlance": { en: "At a Glance", ar: "لمحة سريعة" },
+
   "project.notFound.title": { en: "Project Not Found", ar: "المشروع غير موجود" },
   "project.notFound.back": { en: "Back to Projects", ar: "العودة للمشاريع" },
 
@@ -87,8 +103,8 @@ export const t: Dict = {
   "contact.message": { en: "Message", ar: "الرسالة" },
   "contact.send": { en: "Send Message", ar: "إرسال الرسالة" },
   "contact.success": {
-    en: "Message sent — I'll get back to you soon!",
-    ar: "تم إرسال الرسالة — سأعود إليك قريباً!",
+    en: "Email draft opened — send it from your email app.",
+    ar: "تم فتح مسودة البريد — أرسلها من تطبيق البريد.",
   },
 
   "welcome.eyebrow": { en: "Welcome aboard", ar: "أهلاً بك" },
@@ -111,6 +127,9 @@ export const t: Dict = {
     ar: "بلا ضغط — رد خلال 24 ساعة.",
   },
   "welcome.close": { en: "Close welcome message", ar: "إغلاق رسالة الترحيب" },
+  "welcome.autoclose": { en: "Closing in {s}s", ar: "الإغلاق بعد {s} ثانية" },
+  "welcome.paused": { en: "Paused", ar: "متوقف مؤقتاً" },
+
 
   "footer.headline1": { en: "You can find", ar: "يمكنك أن تجدني" },
   "footer.headline2": { en: "me here:", ar: "هنا:" },
@@ -145,12 +164,18 @@ export const t: Dict = {
   "about.stat.throughput": { en: "Throughput Boost", ar: "زيادة في الأداء" },
   "about.stat.iot": { en: "IoT Endpoints", ar: "نقطة إنترنت أشياء" },
   "about.stat.microservices": { en: "Clean Microservices", ar: "خدمات مصغّرة نظيفة" },
-  "about.principle.1.title": { en: "Clean Architecture & DDD", ar: "المعمارية النظيفة والتصميم المدفوع بالمجال" },
+  "about.principle.1.title": {
+    en: "Clean Architecture & DDD",
+    ar: "المعمارية النظيفة والتصميم المدفوع بالمجال",
+  },
   "about.principle.1.body": {
     en: "Architecting .NET 8 Microservices using Clean Architecture and Domain-Driven Design (DDD) boundaries so platforms scale multi-tenancy seamlessly.",
     ar: "تصميم خدمات مصغّرة بـ .NET 8 وفق المعمارية النظيفة وحدود التصميم المدفوع بالمجال (DDD) لتتوسّع المنصات متعددة المستأجرين بسلاسة.",
   },
-  "about.principle.2.title": { en: "Real-Time Telemetry & SignalR", ar: "البيانات اللحظية و SignalR" },
+  "about.principle.2.title": {
+    en: "Real-Time Telemetry & SignalR",
+    ar: "البيانات اللحظية و SignalR",
+  },
   "about.principle.2.body": {
     en: "High-throughput SignalR and gRPC backend integration layers managing real-time data streams and over 1,000 IoT endpoints.",
     ar: "طبقات تكامل خلفية عالية الإنتاجية بـ SignalR و gRPC تدير تدفّق البيانات اللحظي وأكثر من 1000 نقطة إنترنت أشياء.",
@@ -193,6 +218,17 @@ export const t: Dict = {
     en: "The complete toolkit — from .NET 8 microservices down to Redis distributed caching and Next.js frontends.",
     ar: "مجموعة الأدوات الكاملة — من الخدمات المصغّرة بـ .NET 8 إلى التخزين المؤقت الموزّع بـ Redis وواجهات Next.js.",
   },
+  "cta.band.eyebrow": { en: "NEXT STEP", ar: "الخطوة التالية" },
+  "experience.cta.title": { en: "Like the track record?", ar: "أعجبك السجل المهني؟" },
+  "experience.cta.desc": {
+    en: "See the systems behind these roles, or tell me what you are building next.",
+    ar: "شاهد الأنظمة خلف هذه الأدوار، أو أخبرني بما تبنيه بعد ذلك.",
+  },
+  "skills.cta.title": { en: "Put this stack to work", ar: "لنضع هذه التقنيات في العمل" },
+  "skills.cta.desc": {
+    en: "Browse the projects where this toolkit shipped, or start a conversation.",
+    ar: "تصفح المشاريع التي استُخدمت فيها هذه الأدوات، أو ابدأ محادثة.",
+  },
   "skills.page.projectsCta": { en: "See Projects", ar: "شاهد المشاريع" },
   "skills.page.contactCta": { en: "Work With Me", ar: "لنعمل معاً" },
 
@@ -205,6 +241,8 @@ export const t: Dict = {
     en: "Microsoft Certified proficiency in Azure cloud architecture, DevOps, microservices & enterprise security.",
     ar: "اعتماد من مايكروسوفت في معمارية سحابة Azure و DevOps والخدمات المصغّرة وأمن المؤسسات.",
   },
+  "awards.itemsLabel": { en: "credentials in this set", ar: "شهادات في هذه المجموعة" },
+  "awards.viewCredential": { en: "View Credential", ar: "عرض الشهادة" },
   "awards.learnMore": { en: "VIEW AWARD DETAILS", ar: "تفاصيل الجائزة" },
   "awards.bsc": { en: "B.Sc. in Computer Science (HTI)", ar: "بكالوريوس علوم الحاسب (HTI)" },
   "awards.ddd": { en: "Clean Architecture & DDD Expert", ar: "خبير المعمارية النظيفة و DDD" },
@@ -232,33 +270,74 @@ export const t: Dict = {
 
   "events.item.we3ds.name": { en: "Senior Software Developer", ar: "مطوّر برمجيات أول" },
   "events.item.we3ds.location": { en: "WE3DS Company · Tanta, EG", ar: "شركة WE3DS · طنطا، مصر" },
-  "events.item.we3ds.topic": { en: ".NET 8 Microservices, DDD, SignalR", ar: "خدمات .NET 8 المصغّرة وDDD وSignalR" },
+  "events.item.we3ds.topic": {
+    en: ".NET 8 Microservices, DDD, SignalR",
+    ar: "خدمات .NET 8 المصغّرة وDDD وSignalR",
+  },
 
-  "events.item.freelance.name": { en: "Full Stack Developer (Freelance)", ar: "مطوّر متكامل (عمل حر)" },
-  "events.item.freelance.location": { en: "Self-Employed · Cairo, EG", ar: "عمل حر · القاهرة، مصر" },
-  "events.item.freelance.topic": { en: "React & .NET Core delivery for clients", ar: "تسليم مشاريع React و.NET Core للعملاء" },
+  "events.item.freelance.name": {
+    en: "Full Stack Developer (Freelance)",
+    ar: "مطوّر متكامل (عمل حر)",
+  },
+  "events.item.freelance.location": {
+    en: "Self-Employed · Cairo, EG",
+    ar: "عمل حر · القاهرة، مصر",
+  },
+  "events.item.freelance.topic": {
+    en: "React & .NET Core delivery for clients",
+    ar: "تسليم مشاريع React و.NET Core للعملاء",
+  },
 
-  "events.item.platform.name": { en: "Multi-Tenant Marketplace Platform", ar: "منصة أسواق متعددة المستأجرين" },
-  "events.item.platform.location": { en: "Enterprise · Production", ar: "قطاع المؤسسات · بيئة إنتاج" },
-  "events.item.platform.topic": { en: "300% faster queries with Redis caching", ar: "استعلامات أسرع بنسبة 300% مع تخزين Redis" },
+  "events.item.platform.name": {
+    en: "Multi-Tenant Marketplace Platform",
+    ar: "منصة أسواق متعددة المستأجرين",
+  },
+  "events.item.platform.location": {
+    en: "Enterprise · Production",
+    ar: "قطاع المؤسسات · بيئة إنتاج",
+  },
+  "events.item.platform.topic": {
+    en: "300% faster queries with Redis caching",
+    ar: "استعلامات أسرع بنسبة 300% مع تخزين Redis",
+  },
 
-  "events.item.iot.name": { en: "Real-Time IoT Telemetry Layer", ar: "طبقة قياس عن بُعد لإنترنت الأشياء" },
+  "events.item.iot.name": {
+    en: "Real-Time IoT Telemetry Layer",
+    ar: "طبقة قياس عن بُعد لإنترنت الأشياء",
+  },
   "events.item.iot.location": { en: "WE3DS · Production", ar: "WE3DS · بيئة إنتاج" },
-  "events.item.iot.topic": { en: "1000+ live endpoints over SignalR", ar: "أكثر من 1000 نقطة اتصال حيّة عبر SignalR" },
+  "events.item.iot.topic": {
+    en: "1000+ live endpoints over SignalR",
+    ar: "أكثر من 1000 نقطة اتصال حيّة عبر SignalR",
+  },
 
   "events.item.devops.name": { en: "CI/CD Automation Pipeline", ar: "خط أتمتة CI/CD" },
   "events.item.devops.location": { en: "Azure DevOps · Docker", ar: "Azure DevOps · Docker" },
-  "events.item.devops.topic": { en: "Shorter, repeatable release cycles", ar: "دورات إصدار أقصر وقابلة للتكرار" },
+  "events.item.devops.topic": {
+    en: "Shorter, repeatable release cycles",
+    ar: "دورات إصدار أقصر وقابلة للتكرار",
+  },
 
   "events.item.degree.name": { en: "B.Sc. Computer Science", ar: "بكالوريوس علوم الحاسب" },
   "events.item.degree.location": { en: "HTI University · Egypt", ar: "معهد HTI · مصر" },
-  "events.item.degree.topic": { en: "Software engineering & databases", ar: "هندسة البرمجيات وقواعد البيانات" },
+  "events.item.degree.topic": {
+    en: "Software engineering & databases",
+    ar: "هندسة البرمجيات وقواعد البيانات",
+  },
 
-  "events.item.arch.name": { en: "Clean Architecture & DDD Practice", ar: "تطبيق Clean Architecture وDDD" },
-  "events.item.arch.location": { en: "Self-Study · Applied at work", ar: "تعلّم ذاتي · مطبّق في العمل" },
-  "events.item.arch.topic": { en: "CQRS, MediatR, unit testing", ar: "CQRS وMediatR واختبارات الوحدة" },
+  "events.item.arch.name": {
+    en: "Clean Architecture & DDD Practice",
+    ar: "تطبيق Clean Architecture وDDD",
+  },
+  "events.item.arch.location": {
+    en: "Self-Study · Applied at work",
+    ar: "تعلّم ذاتي · مطبّق في العمل",
+  },
+  "events.item.arch.topic": {
+    en: "CQRS, MediatR, unit testing",
+    ar: "CQRS وMediatR واختبارات الوحدة",
+  },
 };
-
 
 interface I18nContextValue {
   lang: Lang;
