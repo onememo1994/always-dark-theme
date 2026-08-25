@@ -12,7 +12,7 @@ export function FlavorCta() {
           aria-hidden="true"
         >
           {Array.from({ length: 48 }).map((_, index) => {
-            const Icon = PATTERN[index % PATTERN.length];
+            const Icon = PATTERN[index % PATTERN.length]!;
             return <Icon key={index} className="w-8 sm:w-10" />;
           })}
         </div>
