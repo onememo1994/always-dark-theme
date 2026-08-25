@@ -1,12 +1,8 @@
 export function Nav() {
   return (
-    <header className="px-4 pt-4 sm:px-6 sm:pt-6">
-      <nav className="mx-auto flex max-w-[1200px] items-center justify-between rounded-full border-[3px] border-ink bg-ink px-6 py-3 sm:px-8 sm:py-4">
-        <a
-          href="/"
-          className="font-display text-2xl tracking-wide text-cream sm:text-3xl"
-          style={{ WebkitTextStroke: "0px" }}
-        >
+    <header className="px-3 pt-3 sm:px-5 sm:pt-5">
+      <nav className="mx-auto flex max-w-[1200px] items-center justify-between rounded-2xl bg-ink px-5 py-2.5 sm:px-7 sm:py-3.5">
+        <a href="/" className="font-display text-2xl tracking-wide text-signal sm:text-3xl">
           CHOMPO
         </a>
         <button
