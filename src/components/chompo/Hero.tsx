@@ -7,11 +7,11 @@ export function Hero() {
       <Nav />
 
       <div className="mx-auto max-w-[1200px] px-4 pt-8 text-center sm:px-6 sm:pt-12">
-        <p className="font-display text-4xl text-cream sm:text-6xl">THE</p>
-        <h1 className="font-display text-[22vw] leading-[0.78] text-cream sm:text-[17vw] lg:text-[13rem]">
+        <p className="font-display text-3xl leading-none text-cream sm:text-5xl">THE</p>
+        <h1 className="mt-2 font-display text-[20vw] leading-[0.85] text-cream sm:text-[15vw] lg:text-[11.5rem]">
           CHOMPO
         </h1>
-        <p className="mt-4 font-heavy text-[0.7rem] tracking-[0.12em] text-cream uppercase sm:text-xl">
+        <p className="mt-3 font-heavy text-[0.7rem] tracking-[0.12em] text-cream uppercase sm:text-lg">
           The amazing food you ever tasted
         </p>
       </div>
