@@ -245,9 +245,10 @@
 }
 
 @utility bumps-up {
-  background: radial-gradient(circle 18px at 50% 100%, currentColor 99%, transparent 100%) 50% 100% /
-    36px 18px repeat-x;
+  background: radial-gradient(circle 30px at 50% 100%, currentColor 99%, transparent 100%) 50% 100% /
+    56px 30px repeat-x;
 }
+
 
 @utility ticket-edges {
   mask:
