@@ -1,26 +1,40 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Hero } from "@/components/chompo/Hero";
-import { IconBand } from "@/components/chompo/IconBand";
-import { CollageGrid } from "@/components/chompo/CollageGrid";
-import { CraveMarquee } from "@/components/chompo/CraveMarquee";
-import { NewMeal } from "@/components/chompo/NewMeal";
-import { TypeSpiral } from "@/components/chompo/TypeSpiral";
-import { Reviews } from "@/components/chompo/Reviews";
-import { FlavorCta } from "@/components/chompo/FlavorCta";
-
-const TITLE = "CHOMPO | Fast Food & Delivery That Hits Different";
-const DESCRIPTION =
-  "Bold burgers, crispy fries and fried chicken delivered fast. Order from CHOMPO and turn up the flavor.";
+import { Toaster } from "sonner";
+import { SmoothScroll } from "@/components/SmoothScroll";
+import { Navbar } from "@/components/Navbar";
+import { Hero } from "@/components/Hero";
+import { About } from "@/components/About";
+import { Skills } from "@/components/Skills";
+import { Projects } from "@/components/Projects";
+import { Experience } from "@/components/Experience";
+import { Contact } from "@/components/Contact";
+import { Footer } from "@/components/Footer";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: TITLE },
-      { name: "description", content: DESCRIPTION },
-      { property: "og:title", content: TITLE },
-      { property: "og:description", content: DESCRIPTION },
+      { title: "Mostafa Samir — Senior Full Stack Engineer | Banking & Fintech" },
+      {
+        name: "description",
+        content:
+          "Senior Full Stack Engineer with 4+ years building .NET 8 microservices, multi-tenant architectures and real-time platforms for banking and fintech systems.",
+      },
+      { property: "og:title", content: "Mostafa Samir — Banking & Fintech Full Stack Engineer" },
+      {
+        property: "og:description",
+        content:
+          "Scalable microservices, secure multi-tenant platforms and real-time SignalR backends built on .NET 8 for financial-grade reliability.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap",
+      },
     ],
   }),
   component: Index,
@@ -28,21 +42,29 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <main className="bg-cream">
-      <Hero />
-      <IconBand />
-      <CollageGrid />
-      <CraveMarquee />
-      <NewMeal />
-      <TypeSpiral />
-      <Reviews />
-      <FlavorCta />
-      <footer className="border-t-[3px] border-ink bg-ink px-4 py-10 text-center sm:px-6">
-        <p className="font-display text-4xl text-cream sm:text-6xl">CHOMPO</p>
-        <p className="mt-2 font-heavy text-[0.65rem] tracking-[0.24em] text-cream/70 uppercase">
-          The amazing food you ever tasted
-        </p>
-      </footer>
-    </main>
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+      <SmoothScroll />
+      <Toaster
+        theme="dark"
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: "var(--surface-2)",
+            color: "var(--foreground)",
+            border: "1px solid var(--border)",
+          },
+        }}
+      />
+      <Navbar />
+      <main>
+        <Hero />
+        <About />
+        <Skills />
+        <Projects />
+        <Experience />
+        <Contact />
+      </main>
+      <Footer />
+    </div>
   );
 }
