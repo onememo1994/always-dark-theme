@@ -63,9 +63,21 @@ export function About() {
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 to-transparent" />
               </div>
               <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full hairline bg-brand/10 font-mono text-sm text-brand-soft">
-                  MS
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setLightboxOpen(true)}
+                  aria-label="View Mostafa Samir's avatar in full size"
+                  aria-haspopup="dialog"
+                  className="group relative h-14 w-14 shrink-0 cursor-zoom-in overflow-hidden rounded-full hairline transition-transform duration-200 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-soft"
+                >
+                  <img
+                    src={msAvatar.url}
+                    alt="Mostafa Samir avatar"
+                    width={56}
+                    height={56}
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                </button>
                 <div>
                   <div className="font-semibold">Mostafa Samir</div>
                   <div className="text-sm text-muted-foreground">Banking &amp; Fintech Systems</div>
