@@ -5,7 +5,6 @@ import { SectionHeading } from "./SectionHeading";
 import { Reveal } from "./Reveal";
 import { principles } from "@/data/expertise";
 import portrait from "@/assets/portrait-cutout.webp";
-import msAvatar from "@/assets/ms-avatar.png.asset.json";
 
 export function About() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -51,30 +50,19 @@ export function About() {
 
           <Reveal delay={0.1}>
             <div className="flex flex-col rounded-2xl hairline bg-surface/35 p-5 backdrop-blur-sm">
-              <div className="relative mb-4 overflow-hidden rounded-xl hairline bg-brand/5">
-                <img
-                  src={portrait}
-                  alt="Portrait of Mostafa Samir, Senior Full Stack Engineer"
-                  loading="lazy"
-                  width={640}
-                  height={720}
-                  className="h-20 w-full object-cover object-top"
-                />
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/70 to-transparent" />
-              </div>
               <div className="flex items-center gap-4">
                 <button
                   type="button"
                   onClick={() => setLightboxOpen(true)}
-                  aria-label="View Mostafa Samir's avatar in full size"
+                  aria-label="View Mostafa Samir's portrait in full size"
                   aria-haspopup="dialog"
-                  className="group relative h-14 w-14 shrink-0 cursor-zoom-in overflow-hidden rounded-full hairline transition-transform duration-200 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-soft"
+                  className="group relative h-16 w-16 shrink-0 cursor-zoom-in overflow-hidden rounded-2xl hairline transition-transform duration-200 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-soft"
                 >
                   <img
-                    src={msAvatar.url}
-                    alt="Mostafa Samir avatar"
-                    width={56}
-                    height={56}
+                    src={portrait}
+                    alt="Mostafa Samir portrait"
+                    width={64}
+                    height={64}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                 </button>
@@ -107,7 +95,7 @@ export function About() {
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label="Mostafa Samir avatar, full size"
+            aria-label="Mostafa Samir portrait, full size"
             className="fixed inset-0 z-[80] flex items-center justify-center p-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -116,7 +104,7 @@ export function About() {
           >
             <motion.button
               type="button"
-              aria-label="Close avatar preview"
+              aria-label="Close portrait preview"
               onClick={closeLightbox}
               className="absolute inset-0 cursor-zoom-out bg-background/80 backdrop-blur-md"
               initial={{ opacity: 0 }}
@@ -124,24 +112,24 @@ export function About() {
               exit={{ opacity: 0 }}
             />
             <motion.div
-              className="relative"
+              className="relative max-h-[80vh] w-full max-w-md"
               initial={{ scale: 0.6, opacity: 0, y: 24 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.75, opacity: 0, y: 12 }}
               transition={{ type: "spring", stiffness: 300, damping: 26 }}
             >
               <img
-                src={msAvatar.url}
-                alt="Mostafa Samir avatar, full size"
-                width={320}
-                height={320}
-                className="h-64 w-64 rounded-full object-cover shadow-2xl ring-1 ring-border md:h-80 md:w-80"
+                src={portrait}
+                alt="Mostafa Samir portrait, full size"
+                width={640}
+                height={720}
+                className="h-auto w-full rounded-2xl object-contain shadow-2xl ring-1 ring-border"
               />
               <motion.button
                 type="button"
                 onClick={closeLightbox}
-                aria-label="Close avatar preview"
-                className="absolute -right-2 -top-2 flex h-10 w-10 items-center justify-center rounded-full bg-surface text-foreground shadow-lg ring-1 ring-border transition-colors hover:bg-brand/20"
+                aria-label="Close portrait preview"
+                className="absolute -right-3 -top-3 flex h-10 w-10 items-center justify-center rounded-full bg-surface text-foreground shadow-lg ring-1 ring-border transition-colors hover:bg-brand/20"
                 initial={{ scale: 0, rotate: -90 }}
                 animate={{ scale: 1, rotate: 0 }}
                 exit={{ scale: 0, rotate: 90 }}
