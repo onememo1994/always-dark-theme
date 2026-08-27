@@ -1,9 +1,26 @@
+import { useCallback, useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { X } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 import { Reveal } from "./Reveal";
 import { principles } from "@/data/expertise";
 import portrait from "@/assets/portrait-cutout.webp";
+import msAvatar from "@/assets/ms-avatar.png.asset.json";
 
 export function About() {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  const closeLightbox = useCallback(() => setLightboxOpen(false), []);
+
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightboxOpen, closeLightbox]);
+
   return (
     <section id="about" className="relative py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
