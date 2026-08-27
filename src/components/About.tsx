@@ -101,6 +101,58 @@ export function About() {
           </Reveal>
         </div>
       </div>
+
+      <AnimatePresence>
+        {lightboxOpen && (
+          <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mostafa Samir avatar, full size"
+            className="fixed inset-0 z-[80] flex items-center justify-center p-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            <motion.button
+              type="button"
+              aria-label="Close avatar preview"
+              onClick={closeLightbox}
+              className="absolute inset-0 cursor-zoom-out bg-background/80 backdrop-blur-md"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+            <motion.div
+              className="relative"
+              initial={{ scale: 0.6, opacity: 0, y: 24 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.75, opacity: 0, y: 12 }}
+              transition={{ type: "spring", stiffness: 300, damping: 26 }}
+            >
+              <img
+                src={msAvatar.url}
+                alt="Mostafa Samir avatar, full size"
+                width={320}
+                height={320}
+                className="h-64 w-64 rounded-full object-cover shadow-2xl ring-1 ring-border md:h-80 md:w-80"
+              />
+              <motion.button
+                type="button"
+                onClick={closeLightbox}
+                aria-label="Close avatar preview"
+                className="absolute -right-2 -top-2 flex h-10 w-10 items-center justify-center rounded-full bg-surface text-foreground shadow-lg ring-1 ring-border transition-colors hover:bg-brand/20"
+                initial={{ scale: 0, rotate: -90 }}
+                animate={{ scale: 1, rotate: 0 }}
+                exit={{ scale: 0, rotate: 90 }}
+                transition={{ delay: 0.1, type: "spring", stiffness: 400, damping: 20 }}
+              >
+                <X className="h-5 w-5" />
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
