@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { I18nProvider } from "../i18n";
 
 function NotFoundComponent() {
   return (
@@ -77,26 +78,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "FinTech Portfolio Pro: A premium single-page portfolio showcasing a Full-Stack Developer's expertise in banking and FinTech." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "FinTech Portfolio Pro: A premium single-page portfolio showcasing a Full-Stack Developer's expertise in banking and FinTech." },
+      { title: "BikeFix — Your mechanic, faster" },
+      {
+        name: "description",
+        content: "Book a trusted bike mechanic near you and track your repair end to end.",
+      },
+      { property: "og:title", content: "BikeFix — Your mechanic, faster" },
+      {
+        property: "og:description",
+        content: "Book a trusted bike mechanic near you and track your repair end to end.",
+      },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
-      { name: "twitter:description", content: "FinTech Portfolio Pro: A premium single-page portfolio showcasing a Full-Stack Developer's expertise in banking and FinTech." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e48d2db8-502c-4162-a250-6c6a1f11e61e/id-preview-d0ce9239--f1007057-ee38-449f-8aa9-544b472a5bf0.lovable.app-1781081962063.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e48d2db8-502c-4162-a250-6c6a1f11e61e/id-preview-d0ce9239--f1007057-ee38-449f-8aa9-544b472a5bf0.lovable.app-1781081962063.png" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", type: "image/png", href: "/favicon.png" },
-      { rel: "apple-touch-icon", href: "/favicon.png" },
+      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
   shellComponent: RootShell,
@@ -122,26 +122,12 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
-  useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout> | undefined;
-    const onScroll = () => {
-      document.documentElement.classList.add("is-scrolling");
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        document.documentElement.classList.remove("is-scrolling");
-      }, 600);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      clearTimeout(timeout);
-    };
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <I18nProvider>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+      </I18nProvider>
     </QueryClientProvider>
   );
 }
