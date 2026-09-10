@@ -1,6 +1,7 @@
 import { useI18n } from "@/i18n";
 import { Button } from "@/components/ui/button";
 import { LangToggle } from "@/components/LangToggle";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function SiteHeader() {
   const { t } = useI18n();
@@ -34,6 +35,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <LangToggle />
           <Button size="sm" asChild>
             <a href="#request">{t("fixMyBike")}</a>
