@@ -136,3 +136,33 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ===== Niche scrollbar — BikeFix teal & orange ===== */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--surface-muted);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-muted);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--primary), var(--primary-strong));
+  border-radius: 999px;
+  border: 2px solid var(--surface-muted);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--accent), var(--primary));
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
