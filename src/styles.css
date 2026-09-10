@@ -63,40 +63,41 @@
 }
 
 :root {
+  /* Bike-themed palette: race-orange + safety-lime on asphalt greys */
   --radius: 12px;
-  --background: #f7f8fa;
-  --foreground: #102a43;
+  --background: #f6f6f4;
+  --foreground: #1c1f1e;
   --surface: #ffffff;
-  --surface-muted: #eef3f5;
-  --primary: #167d9a;
-  --primary-strong: #0e6078;
+  --surface-muted: #ecedea;
+  --primary: #f2451d;
+  --primary-strong: #c93511;
   --primary-foreground: #ffffff;
-  --accent: #f28c28;
-  --accent-foreground: #23180c;
-  --success: #2e8b57;
-  --warning: #d99a24;
-  --danger: #d64545;
+  --accent: #8fc41f;
+  --accent-foreground: #1c2405;
+  --success: #3d9d4e;
+  --warning: #e19c15;
+  --danger: #d63c2e;
   --on-status: #ffffff;
-  --border: #d9e1e5;
-  --muted: #667781;
+  --border: #d8d9d3;
+  --muted: #636a66;
 }
 
 .dark {
-  --background: #0b1117;
-  --foreground: #f4f7f8;
-  --surface: #111b23;
-  --surface-muted: #172630;
-  --primary: #46a9c4;
-  --primary-strong: #63bcd3;
-  --primary-foreground: #06131a;
-  --accent: #f5a14a;
-  --accent-foreground: #1c1206;
-  --success: #54b77a;
-  --warning: #e4b24c;
-  --danger: #f06b6b;
-  --on-status: #08131a;
-  --border: #2a3943;
-  --muted: #9aaab3;
+  --background: #0d0f0e;
+  --foreground: #f2f4f1;
+  --surface: #161917;
+  --surface-muted: #1d211e;
+  --primary: #ff5c33;
+  --primary-strong: #ff7a52;
+  --primary-foreground: #160601;
+  --accent: #a5d63e;
+  --accent-foreground: #101503;
+  --success: #5dbf72;
+  --warning: #ecb43f;
+  --danger: #f06555;
+  --on-status: #140401;
+  --border: #2a2e2b;
+  --muted: #939c96;
 }
 
 @layer base {
@@ -137,7 +138,7 @@
   }
 }
 
-/* ===== Niche scrollbar — BikeFix teal & orange ===== */
+/* ===== Niche scrollbar — BikeFix race-orange & lime ===== */
 html {
   scrollbar-width: thin;
   scrollbar-color: var(--primary) var(--surface-muted);
