@@ -41,8 +41,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
-export function useTheme() {
+export function useTheme(): ThemeValue {
   const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error("useTheme must be used inside ThemeProvider");
-  return ctx;
+  if (ctx) return ctx;
+  // Safe fallback so a missing provider never blanks the page.
+  return {
+    mode: "system",
+    setMode: (m) => {
+      if (typeof window === "undefined") return;
+      localStorage.setItem("bikefix.theme", m);
+      apply(m);
+    },
+  };
 }
